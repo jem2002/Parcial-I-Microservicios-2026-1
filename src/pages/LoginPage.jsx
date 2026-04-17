@@ -45,50 +45,68 @@ export default function LoginPage() {
     };
 
     return (
-        <div className="mx-auto flex min-h-[calc(100vh-4rem)] max-w-md items-center justify-center px-4 py-8 sm:px-6">
-            <div className="w-full rounded-[32px] border border-slate-200 bg-white p-8 shadow-xl">
-                <h1 className="text-3xl font-semibold text-university-900">Iniciar sesión</h1>
-                <p className="mt-2 text-sm text-slate-600">Ingresa tus datos para acceder al catálogo de la biblioteca.</p>
+        <div className="mx-auto flex min-h-[calc(100vh-4rem)] max-w-5xl items-center justify-center px-4 py-10 sm:px-6">
+            <div className="grid w-full grid-cols-1 gap-8 rounded-[36px] border border-slate-200 bg-white p-8 shadow-2xl lg:grid-cols-[1.1fr_0.9fr] lg:p-10">
+                <div className="space-y-6">
+                    <div className="inline-flex items-center rounded-full bg-university-50 px-4 py-2 text-xs font-semibold uppercase tracking-[0.24em] text-university-700 shadow-sm">
+                        Bienvenido de vuelta
+                    </div>
+                    <div>
+                        <h1 className="text-4xl font-semibold text-university-900">Inicia sesión en tu cuenta</h1>
+                        <p className="mt-3 text-base leading-7 text-slate-600">
+                            Accede al catálogo institucional y revisa la colección de libros disponibles en la biblioteca universitaria.
+                        </p>
+                    </div>
+                    <div className="rounded-3xl bg-slate-50 p-6 text-slate-700 shadow-sm">
+                        <p className="text-sm font-semibold text-slate-900">Consejo</p>
+                        <p className="mt-2 text-sm text-slate-600">Usa el usuario <strong>admin</strong> si quieres probar funciones de administración.</p>
+                    </div>
+                </div>
 
-                {serverError && <div className="mt-4 rounded-2xl bg-rose-50 px-4 py-3 text-sm text-rose-700">{serverError}</div>}
+                <div className="space-y-6">
+                    <div className="rounded-[32px] bg-slate-100 p-6 text-center text-sm text-slate-700">
+                        ¿Aún no tienes cuenta? Regístrate y explora el catálogo.
+                    </div>
 
-                <form onSubmit={handleSubmit} className="mt-6 space-y-4">
-                    <label className="block text-sm text-slate-700">
-                        Usuario o correo
-                        <input
-                            value={credentials.usernameOrEmail}
-                            onChange={handleChange('usernameOrEmail')}
-                            className="mt-2 w-full rounded-2xl border border-slate-300 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none focus:border-university-500 focus:ring-2 focus:ring-university-100"
-                        />
-                        {errors.usernameOrEmail && <p className="mt-2 text-xs text-rose-600">{errors.usernameOrEmail}</p>}
-                    </label>
+                    {serverError && <div className="rounded-3xl bg-rose-50 p-4 text-sm text-rose-700 shadow-sm">{serverError}</div>}
 
-                    <label className="block text-sm text-slate-700">
-                        Contraseña
-                        <input
-                            type="password"
-                            value={credentials.password}
-                            onChange={handleChange('password')}
-                            className="mt-2 w-full rounded-2xl border border-slate-300 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none focus:border-university-500 focus:ring-2 focus:ring-university-100"
-                        />
-                        {errors.password && <p className="mt-2 text-xs text-rose-600">{errors.password}</p>}
-                    </label>
+                    <form onSubmit={handleSubmit} className="space-y-4">
+                        <label className="block text-sm text-slate-700">
+                            Usuario o correo
+                            <input
+                                value={credentials.usernameOrEmail}
+                                onChange={handleChange('usernameOrEmail')}
+                                className="mt-2 w-full rounded-3xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-university-500 focus:ring-2 focus:ring-university-100"
+                            />
+                            {errors.usernameOrEmail && <p className="mt-2 text-xs text-rose-600">{errors.usernameOrEmail}</p>}
+                        </label>
 
-                    <button
-                        type="submit"
-                        disabled={loading}
-                        className="flex w-full items-center justify-center rounded-full bg-university-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-university-700 disabled:cursor-not-allowed disabled:opacity-70"
-                    >
-                        {loading ? <Spinner /> : 'Ingresar'}
-                    </button>
-                </form>
+                        <label className="block text-sm text-slate-700">
+                            Contraseña
+                            <input
+                                type="password"
+                                value={credentials.password}
+                                onChange={handleChange('password')}
+                                className="mt-2 w-full rounded-3xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-university-500 focus:ring-2 focus:ring-university-100"
+                            />
+                            {errors.password && <p className="mt-2 text-xs text-rose-600">{errors.password}</p>}
+                        </label>
 
-                <p className="mt-6 text-sm text-slate-600">
-                    ¿No tienes cuenta?{' '}
-                    <Link to="/register" className="font-semibold text-university-700 hover:text-university-900">
-                        Regístrate
-                    </Link>
-                </p>
+                        <button
+                            type="submit"
+                            disabled={loading}
+                            className="flex w-full items-center justify-center rounded-full bg-university-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-university-700 disabled:cursor-not-allowed disabled:opacity-70"
+                        >
+                            {loading ? <Spinner /> : 'Ingresar'}
+                        </button>
+                    </form>
+
+                    <p className="text-center text-sm text-slate-600">
+                        <Link to="/register" className="font-semibold text-university-700 hover:text-university-900">
+                            Crear cuenta
+                        </Link>
+                    </p>
+                </div>
             </div>
         </div>
     );

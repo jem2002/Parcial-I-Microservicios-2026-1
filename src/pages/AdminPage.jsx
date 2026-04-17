@@ -51,21 +51,37 @@ export default function AdminPage() {
 
     return (
         <div className="mx-auto max-w-7xl space-y-6">
-            <div className="flex flex-col gap-4 rounded-[32px] border border-slate-200 bg-white p-6 shadow-sm sm:flex-row sm:items-center sm:justify-between">
-                <div>
-                    <h1 className="text-3xl font-semibold text-university-900">Panel administrativo</h1>
-                    <p className="mt-2 text-slate-600">Gestiona los libros disponibles en la biblioteca universitaria.</p>
+            <div className="overflow-hidden rounded-[32px] border border-slate-200 bg-white shadow-sm">
+                <div className="bg-gradient-to-r from-slate-900 to-university-600 px-6 py-8 sm:px-10">
+                    <div className="max-w-3xl text-white">
+                        <p className="text-sm uppercase tracking-[0.24em] text-sky-200">Panel administrativo</p>
+                        <h1 className="mt-3 text-4xl font-semibold leading-tight">Gestiona el catálogo de la biblioteca</h1>
+                        <p className="mt-4 text-sm text-slate-100/90">Crea, actualiza o elimina libros desde un panel visual y ordenado.</p>
+                    </div>
                 </div>
-                <button
-                    type="button"
-                    onClick={() => handleOpenForm()}
-                    className="rounded-full bg-university-600 px-5 py-3 text-sm font-semibold text-white hover:bg-university-700"
-                >
-                    Nuevo libro
-                </button>
+                <div className="grid gap-4 border-t border-slate-200 bg-slate-50 px-6 py-6 sm:grid-cols-3">
+                    <div className="rounded-3xl bg-white p-5 shadow-sm">
+                        <p className="text-sm font-semibold text-slate-900">Libros disponibles</p>
+                        <p className="mt-3 text-3xl font-semibold text-university-900">{pagination.total ?? books.length}</p>
+                    </div>
+                    <div className="rounded-3xl bg-white p-5 shadow-sm">
+                        <p className="text-sm font-semibold text-slate-900">Página actual</p>
+                        <p className="mt-3 text-3xl font-semibold text-university-900">{page}</p>
+                    </div>
+                    <div className="rounded-3xl bg-white p-5 shadow-sm">
+                        <p className="text-sm font-semibold text-slate-900">Acción</p>
+                        <button
+                            type="button"
+                            onClick={() => handleOpenForm()}
+                            className="mt-3 inline-flex rounded-full bg-university-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-university-700"
+                        >
+                            Nuevo libro
+                        </button>
+                    </div>
+                </div>
             </div>
 
-            {error && <div className="rounded-3xl border border-rose-200 bg-rose-50 p-6 text-rose-800">{error}</div>}
+            {error && <div className="rounded-3xl border border-rose-200 bg-rose-50 p-6 text-rose-800 shadow-sm">{error}</div>}
             {loading && <Spinner />}
 
             {!loading && !error && (
@@ -83,7 +99,7 @@ export default function AdminPage() {
                         </thead>
                         <tbody className="divide-y divide-slate-200">
                             {books.map((book) => (
-                                <tr key={book.id}>
+                                <tr key={book.id} className="transition hover:bg-slate-50">
                                     <td className="whitespace-nowrap px-4 py-4 text-slate-800">{book.title}</td>
                                     <td className="whitespace-nowrap px-4 py-4 text-slate-700">{book.author}</td>
                                     <td className="whitespace-nowrap px-4 py-4 text-slate-700">{book.isbn || 'N/A'}</td>
@@ -93,13 +109,13 @@ export default function AdminPage() {
                                         <div className="flex flex-wrap gap-2">
                                             <button
                                                 onClick={() => handleOpenForm(book)}
-                                                className="rounded-full bg-slate-100 px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-200"
+                                                className="rounded-full bg-slate-100 px-3 py-2 text-xs font-semibold text-slate-700 transition hover:bg-slate-200"
                                             >
                                                 Editar
                                             </button>
                                             <button
                                                 onClick={() => handleDelete(book)}
-                                                className="rounded-full bg-rose-100 px-3 py-2 text-xs font-semibold text-rose-700 hover:bg-rose-200"
+                                                className="rounded-full bg-rose-100 px-3 py-2 text-xs font-semibold text-rose-700 transition hover:bg-rose-200"
                                             >
                                                 Eliminar
                                             </button>
@@ -117,7 +133,7 @@ export default function AdminPage() {
                                 type="button"
                                 onClick={() => setPage(Math.max(1, page - 1))}
                                 disabled={page <= 1}
-                                className="rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 disabled:cursor-not-allowed disabled:opacity-50"
+                                className="rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 disabled:cursor-not-allowed disabled:opacity-50 transition hover:bg-slate-100"
                             >
                                 Anterior
                             </button>
@@ -125,7 +141,7 @@ export default function AdminPage() {
                                 type="button"
                                 onClick={() => setPage(page + 1)}
                                 disabled={page >= Math.ceil(pagination.total / pagination.limit)}
-                                className="rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 disabled:cursor-not-allowed disabled:opacity-50"
+                                className="rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 disabled:cursor-not-allowed disabled:opacity-50 transition hover:bg-slate-100"
                             >
                                 Siguiente
                             </button>
@@ -136,6 +152,7 @@ export default function AdminPage() {
 
             {showForm && (
                 <BookForm
+                    key={editingBook?.id ?? 'new'}
                     book={editingBook}
                     onClose={() => setShowForm(false)}
                     onSave={handleSave}
@@ -143,7 +160,7 @@ export default function AdminPage() {
                 />
             )}
 
-            {formError && <div className="rounded-3xl border border-rose-200 bg-rose-50 p-6 text-rose-800">{formError}</div>}
+            {formError && <div className="rounded-3xl border border-rose-200 bg-rose-50 p-6 text-rose-800 shadow-sm">{formError}</div>}
         </div>
     );
 }

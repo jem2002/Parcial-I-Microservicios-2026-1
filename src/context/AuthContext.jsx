@@ -1,4 +1,5 @@
-import { createContext, useEffect, useMemo, useState } from 'react';
+/* eslint-disable react-refresh/only-export-components */
+import { createContext, useState } from 'react';
 import * as authApi from '../api/auth.api.js';
 
 export const AuthContext = createContext({});
@@ -16,7 +17,7 @@ const decodeTokenPayload = (token) => {
                 .join('')
         );
         return JSON.parse(utf8String);
-    } catch (error) {
+    } catch {
         return null;
     }
 };
@@ -34,23 +35,11 @@ const buildUserFromToken = (token) => {
 };
 
 export const AuthProvider = ({ children }) => {
-    const [accessToken, setAccessToken] = useState(null);
-    const [user, setUser] = useState(null);
-    const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-        const token = localStorage.getItem('accessToken');
-        if (token) {
-            const parsedUser = buildUserFromToken(token);
-            if (parsedUser) {
-                setAccessToken(token);
-                setUser(parsedUser);
-            } else {
-                localStorage.removeItem('accessToken');
-            }
-        }
-        setLoading(false);
-    }, []);
+    const initialToken = typeof window !== 'undefined' ? localStorage.getItem('accessToken') : null;
+    const initialUser = buildUserFromToken(initialToken);
+    const [accessToken, setAccessToken] = useState(initialUser ? initialToken : null);
+    const [user, setUser] = useState(initialUser || null);
+    const [loading] = useState(false);
 
     const login = async (credentials) => {
         const data = await authApi.login(credentials);
@@ -83,7 +72,7 @@ export const AuthProvider = ({ children }) => {
         return user.roles.includes(role);
     };
 
-    const contextValue = useMemo(() => ({
+    const contextValue = {
         user,
         accessToken,
         loading,
@@ -91,7 +80,7 @@ export const AuthProvider = ({ children }) => {
         logout,
         isAuthenticated,
         hasRole,
-    }), [user, accessToken, loading]);
+    };
 
     return (
         <AuthContext.Provider value={contextValue}>
