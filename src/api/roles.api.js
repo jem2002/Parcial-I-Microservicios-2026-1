@@ -31,12 +31,12 @@ export const getRoles = async () => {
     return response.data;
 };
 
-export const createRole = async (roleName, description = '') => {
-    const response = await rolesApi.post('/api/roles', { roleName, description });
+export const createRole = async (name) => {
+    const response = await rolesApi.post('/api/roles', { name });
     return response.data;
 };
 
-export const addPermissionToRole = async (roleName, permission) => {
-    const response = await rolesApi.post(`/api/roles/${roleName}/permissions`, { permission });
+export const addPermissionToRole = async (roleName, code, description = '') => {
+    const response = await rolesApi.post(`/api/roles/${roleName}/permissions`, { code, description });
     return response.data;
 };

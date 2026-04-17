@@ -11,7 +11,17 @@ export const useRoles = () => {
         setError(null);
         try {
             const response = await rolesApi.getRoles();
-            const rolesList = response.data || [];
+            // Manejar diferentes formatos de respuesta
+            let rolesList = [];
+
+            if (response && response.data && Array.isArray(response.data)) {
+                // Formato: { data: [...] }
+                rolesList = response.data;
+            } else if (Array.isArray(response)) {
+                // Respuesta directa como array
+                rolesList = response;
+            }
+
             setRoles(rolesList);
         } catch (fetchError) {
             setError(fetchError.response?.data?.message || fetchError.message || 'Error al cargar roles');
@@ -24,31 +34,25 @@ export const useRoles = () => {
         fetchRoles();
     }, [fetchRoles]);
 
-    const createRole = async (roleName, description = '') => {
-        setLoading(true);
+    const createRole = async (name) => {
         setError(null);
         try {
-            await rolesApi.createRole(roleName, description);
+            await rolesApi.createRole(name);
             await fetchRoles();
         } catch (createError) {
             setError(createError.response?.data?.message || createError.message || 'Error al crear rol');
             throw createError;
-        } finally {
-            setLoading(false);
         }
     };
 
-    const addPermission = async (roleName, permission) => {
-        setLoading(true);
+    const addPermission = async (roleName, code, description = '') => {
         setError(null);
         try {
-            await rolesApi.addPermissionToRole(roleName, permission);
+            await rolesApi.addPermissionToRole(roleName, code, description);
             await fetchRoles();
         } catch (addError) {
             setError(addError.response?.data?.message || addError.message || 'Error al agregar permiso');
             throw addError;
-        } finally {
-            setLoading(false);
         }
     };
 

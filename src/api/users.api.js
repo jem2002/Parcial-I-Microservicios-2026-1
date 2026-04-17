@@ -26,8 +26,8 @@ usersApi.interceptors.response.use(
     }
 );
 
-export const getUsers = async (page = 1, limit = 10) => {
-    const response = await usersApi.get('/api/users', { params: { page, limit } });
+export const getUsers = async () => {
+    const response = await usersApi.get('/api/users');
     return response.data;
 };
 
